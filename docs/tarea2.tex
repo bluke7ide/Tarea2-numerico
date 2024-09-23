@@ -1,0 +1,189 @@
+\documentclass[12pt,final,twoside,notitlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=3cm,right=3cm,top=2cm,bottom=6cm]{geometry}
+\usepackage[autolinebreaks,useliterate]{mcode}
+\usepackage{fancyhdr}
+\usepackage{bm}
+\usepackage{listings}
+\setlength{\headheight}{100pt} 
+\pagestyle{plain}
+\decimalpoint
+
+\author{Juan G. Calvo}
+
+\begin{document}
+\thispagestyle{fancy}
+\lhead{\includegraphics[width=4cm]{UCR.png}}
+\chead{\textbf{UNIVERSIDAD DE COSTA RICA\\FACULTAD DE CIENCIAS\\ESCUELA DE MATEMÁTICA}}
+\rhead{\includegraphics[width=4cm]{EMat.png}}
+
+\textbf{\begin{center}
+MA-0501 Análisis Numérico I\\ TAREA 1\\
+\end{center}}
+
+\textbf{Fecha de entrega:} Lunes 07 de octubre, 11:59pm.
+
+\textbf{Instrucciones:}
+\begin{itemize}
+\item[--] La entrega de la tarea debe realizarse en la plataforma de Mediación Virtual, antes de la fecha y hora establecida.
+\item[--] Debe subir dos archivos:
+\begin{itemize}
+\item[--] Un archivo en formato pdf con la resolución de los ejercicios y la discusión de los resultados. El documento debe llamarse \texttt{ApellidosNombre.pdf}
+\item[--] Un archivo \texttt{MATLAB} (\texttt{ApellidosNombre.m} o \texttt{ApellidosNombre.mlx}) con todos los códigos implementados, debidamente documentados y listos para ser ejecutados.% El archivo debe llamarse .
+\end{itemize}
+\item[--] Recuerde que \textit{una imagen dice más que mil palabras}. Al mostrar resultados, presente gráficos claros debidamente rotulados, con escalas y leyendas adecuadas.
+\item[--] El trabajo se puede realizar individualmente o en parejas. Si aplica, debe citar cualquier colaboración o referencia utilizada. En caso de ser en parejas, incluir en el nombre de los archivos \texttt{Apellido1Nombre1\_Apellido2Nombre2.m}. Basta subir una entrega por pareja.
+\item[--] Se evaluará sobre un total de 100 puntos; en caso de obtener un mayor puntaje, dichos puntos no serán acumulables ni transferibles.
+% (de un todal de 109 posibles)
+\end{itemize}
+
+\textbf{Respuesta corta.}
+\begin{enumerate}
+\item (2 puntos) Describa un algoritmo determinar los pesos $w_i$ de la fórmula de Newton-Cotes para $n=3$ en el intervalo $[-1,1]$, la cual viene dada por $$\int_{-1}^1 f(x)\ dx \approx w_0 f(-1) + w_1 f(-1/3) + w_2 f(1/3)  + w_3f(1).$$ No es necesario calcular los valores exactos.
+
+\item (2 puntos) Describa un método, con base en lo estudiado en clase, para aproximar la integral impropia 
+\begin{align*}
+I &= \int_0^1 \dfrac{\sin(x)}{x^{3/2}}\ dx
+\end{align*}
+de forma tal que pueda garantizar que el error es menor a una tolerancia dada.
+
+\item (2 puntos) En una regla de cuadratura en el intervalo $[0,1]$ con $n+1$ nodos, se fijan 3 nodos internos. ¿Cuál es el mayor grado de un polinomio que se puede integrar de manera exacta? Justifique de forma general.
+
+\end{enumerate}
+
+\textbf{Desarrollo}
+\begin{enumerate}
+\item (6 puntos) Considere $n+2$ puntos $\lbrace (x_i,y_i)\rbrace_{i=0}^{n+1}$ (donde los $x_i$ son distintos). Sea $q$ el polinomio de Lagrange de grado $n$ que interpola los puntos $\lbrace (x_i,y_i)\rbrace_{i=0}^{n}$ y sea $r$ el polinomio de Lagrange de grado $n$ que interpola los puntos $\lbrace (x_i,y_i)\rbrace_{i=1}^{n+1}$. Defina $$p(x):=\dfrac{(x-x_0)r(x)-(x-x_{n+1})q(x)}{x_{n+1}-x_0}.$$ Demuestre que $p$ es el polinomio de grado $n+1$ que interpola todo el conjunto de datos.
+
+\item En este ejercicio se demostrará cómo obtener la fórmula de Gauss de una forma diferente a la vista en clase. Dados $n$ natural, un intervalo $[a,b]$ y una función peso $w:(a,b)\to \mathbb{R}^+$, considere el polinomio ortogonal $\phi_{n+1}(x)$ de grado $n+1$. En clase demostramos que sus $n+1$ ceros, los cuales denotamos por $\{x_0,\ldots,x_n\}$, son distintos y están en el intervalo $(a,b)$. %demostraremos la existencia de pesos y nodos que satisfacen que la cuadratura de Gauss vista en clase es exacta para polinomios de grado $2n+1$.
+\begin{enumerate}
+    \item (3 puntos) Sea $p$ un polinomio de grado a lo sumo $2n+1$. Por el algoritmo de la división, es posible escribir $p(x)=\phi_{n+1}(x)q(x)+r(x)$, para polinomios apropiados $q, r$. Demuestre que $$\int_a^b p(x)w(x)\ dx = \int_a^b r(x)w(x)\ dx.$$
+    \item (3 puntos) Exprese $r$ como combinación lineal de los polinomios de Lagrange $\{ L_i\}_{i=0}^n$ (asociados a los nodos $\{x_0,\ldots,x_n\}$). Justifique por qué esto es posible.
+    \item (3 puntos) Demuestre que $$\int_a^b p(x)w(x)\ dx = \sum_{i=0}^n w_i p(x_i)$$ para valores apropiados de $\{w_i\}_{i=0}^n$. Dé explícitamente la fórmula para cada $w_i$. ¿Coincide con la fórmula dada en clase?
+    \item (1 punto) Concluya que la cuadratura $\displaystyle\sum_{i=0}^n w_i p(x_i)$ es exacta para cualquier polinomio de grado a lo sumo $2n+1$.
+\end{enumerate}
+
+\item En este ejercicio se deducirá una manera diferente para definir los nodos y pesos de la cuadratura de Gauss. Considere un conjunto de polinomios ortogonales mónicos\footnote{En este caso, primero normalizamos los polinomios de forma tal que el coeficiente del término de mayor grado es 1.} $\lbrace \phi_j\rbrace_{j=0}^\infty$ en el intervalo $[a,b]$, correspondientes a una función peso $w(x)$.
+\begin{enumerate}
+    \item (6 puntos) Demuestre que existen sucesiones $\lbrace a_k\rbrace_{k=1}^\infty$, $\lbrace b_k\rbrace_{k=0}^\infty$, tales que los polinomios ortogonales satisfacen la relación de recurrencia 
+\begin{align*}
+\phi_1(x) &= (x-b_0)\phi_0(x),\\
+\phi_{k+1}(x) &= (x-b_k)\phi_k(x) - a_k\phi_{k-1}(x)\ \forall\ k\geq 1. 
+\end{align*}
+Dé fórmulas explícitas para el término general de cada sucesión\footnote{Deben quedar en términos del producto interno $(f,g)_w = \int_a^b fgw$ o la norma asociada $\|f\|=((f,f)_w)^{1/2}$.}.
+Sugerencia: Por algoritmo de la división, para cada $k\geq 1$ se tiene que $\phi_{k+1}(x)-x \phi_k(x)$ es un polinomio de grado $k$.
+\item (4 puntos) Considere ahora polinomios ortonormales $\{\widetilde{\phi}_j\}_{j=0}^\infty$. Escribiendo $\phi_k = \|\phi_k\| \widetilde{\phi}_k$ y las fórmulas de los coeficientes del inciso anterior, deduzca que existen sucesiones $\lbrace \alpha_k\rbrace_{k=1}^\infty$, $\lbrace \beta_k\rbrace_{k=0}^\infty$ tales que  
+\begin{align} \label{eq:rec}
+\alpha_1\widetilde{\phi}_1(x) + \beta_0 \widetilde{\phi}_0(x) &= x \widetilde{\phi}_0(x),\nonumber \\
+\alpha_{k+1}\widetilde{\phi}_{k+1}(x) + \beta_k \widetilde{\phi}_k(x) + \alpha_{k}\widetilde{\phi}_{k-1}(x) &= x \widetilde{\phi}_k(x)\ \forall\ k\geq 1. 
+\end{align}
+
+\item (4 puntos) Para $n$ fijo, considere los ceros $\{x_0,\ldots,x_n\}$ del polinomio $\widetilde{\phi}_{n+1}$. Evalúe \eqref{eq:rec} (para $1\leq k \leq n$) en un cero $x_j$ . Concluya que $x_j$ es un cero del polinomio ortogonal $\widetilde{\phi}_{n+1}$ si y solo si es un valor propio de la matriz $T$ de tamaño $(n+1)\times (n+1)$ dada por 
+\begin{equation*} \label{eq:T}
+T = \left[
+\begin{array}{llllll}
+\beta_0 & \alpha_1 &  &  &  &  \\ 
+\alpha_1 & \beta_1 & \alpha_2 &  &  &  \\ 
+ & \alpha_2 & \beta_2 & \alpha_3 &  &  \\ 
+ &  & \ddots & \ddots & \ddots &  \\ 
+ &  &  & \alpha_{n-1} & \beta_{n-1} & \alpha_{n} \\ 
+ &  &  &  & \alpha_n & \beta_n
+\end{array} 
+\right].
+\end{equation*}
+
+\item (4 puntos) Para $i,j\in \{0,\ldots, n\}$, utilice el hecho que la cuadratura de Gauss integra de forma exacta $\widetilde{\phi}_i\widetilde{\phi}_j$ para deducir que $$\delta_{ij} = \sum_{k=0}^n w_k \widetilde{\phi}_i(x_k)\widetilde{\phi}_j(x_k).$$ Concluya que $P^T W P  = I$, donde $I$ es la matriz identidad de tamaño $(n+1)\times (n+1)$, y las matrices $W, P$ vienen dadas por
+\begin{equation*} \label{eq:T}
+W = \left[
+\begin{array}{cccc}
+w_0 &  0 & \ldots  & 0   \\ 
+0 & w_1 &  \ddots & \vdots \\ 
+\vdots & \ddots&  &0  \\ 
+0  & \ldots & 0 & w_n 
+\end{array} 
+\right], 
+P = \left[
+\begin{array}{ccc}
+\widetilde{\phi}_0(x_0) &  \ldots  & \widetilde{\phi}_n(x_0)   \\ 
+%\vdots & \ddots &   & \vdots \\ 
+\vdots & \ddots & \vdots \\ 
+\widetilde{\phi}_0(x_n)  & \ldots  &\widetilde{\phi}_n(x_n) 
+\end{array} 
+\right].
+\end{equation*}
+
+\item (2 puntos) Es posible demostrar que $W^{-1} = PP^T$. Deduzca así que $$\frac{1}{w_j} = \displaystyle \sum_{i=0}^n (\widetilde{\phi}_i(x_j))^2.$$
+
+\item (2 puntos) Considere ahora el vector propio unitario $v^{(j)} = [v_1^{(j)},\ldots,v_{n+1}^{(j)}]^T$ de la matriz $T$ asociado al valor propio (nodo) $x_j$. Demuestre que existe una constante $C$ tal que $v^{(j)} = C[\widetilde{\phi}_0(x_j),\ldots,\widetilde{\phi}_{n}(x_j)]^T$.
+
+\item (2 puntos) Demuestre que $C=\sqrt{\mu} v_1^{(j)}$, con $\mu = \int_a^b w(x)\ dx$. Sugerencia: utilice el hecho que $(\widetilde{\phi}_0,\widetilde{\phi}_0)_w=1$.
+
+\item (2 puntos)  Concluya que los pesos de la cuadratura se pueden escribir como $w_j = \mu (v_1^{(j)})^2$.
+
+\item (8 puntos) [\texttt{MATLAB}] Para el caso $w(x)=1$ en $[-1,1]$, escriba una función que calcule la matriz $T$ para $n$ dado, y sus valores y vectores propios. Utilice las fórmulas demostradas anteriormente para que la función retorne los pesos y nodos de la cuadratura de Gauss. Sugerencia: para calcular los valores y vectores propios utilice la función \texttt{[V,D]=eig(T)}.
+
+\item (2 puntos) [\texttt{MATLAB}]Verifique que para $n=0$ su programa retorna $x_0=0, w_0=2$, y que para $n=1$ retorna $x_0 = -1/\sqrt{3}, x_1=1/\sqrt{3},w_0 = w_1 =1$.
+\item (4 puntos) [\texttt{MATLAB}] Construya una cuadratura que permita integrar $f(x)=x^8+2x^2+x$ de manera exacta. Utilice el mínimo valor de $n$ posible. Escriba los nodos y pesos que utilizó, y verifique que obtiene el resultado correcto.
+\item (6 puntos) [\texttt{MATLAB}] Implemente una función que calcule la fórmula compuesta de la cuadratura de Gauss. Para ello, considere como entrada el intervalo $[a,b]$, el número de subintervalos $m$, el valor $n$ para la cuadratura de Gauss y la función $f$. Dicha función debe calcular una partición uniforme $\{x_j\}_{j=0}^m$ dada por 
+$$x_j:= a+j h\ (j=0,\ldots,m),\quad \text{con }\ h = \dfrac{b-a}{m},$$ 
+y calcular la fórmula
+$$\int_a^b f(x) \ dx \approx \dfrac{h}{2}\sum_{j=1}^m \sum_{k=0}^n W_k f\left( \dfrac{1}{2}(x_{j-1}+x_j) + \dfrac{1}{2} h \widetilde{x}_k\right) \ dt,$$ donde $\lbrace\widetilde{x}_k\rbrace_{k=0}^n$ son los ceros de un polinomio ortogonal de grado $n+1$ en el intervalo $[-1,1]$ y $w_k$ los pesos asociados (que calculó anteriormente).
+\item (4 puntos) [\texttt{MATLAB}] Considere $g(x) = \sen(100\pi x)(1-x)^{1/2} \log(1-x)$ en el intervalo $[0,1]$. Grafique, para $n\in \{ 0,2,5,8\}$, el error absoluto de esta cuadratura compuesta en función de $m$ (una curva para cada valor de $n$). Comente sus resultados. Utilice $I_g=0.003940021793519$ como valor exacto.
+\end{enumerate}
+
+\item {\rm 
+En este ejercicio se busca construir una aproximación para la derivada de una función, a partir de su polinomio de interpolación de una manera diferente a las fórmulas estudiadas de $n+1$ puntos del Capítulo 3.
+\begin{enumerate}
+\item (4 puntos) Demuestre que $$L_k(x) = \dfrac{\lambda_k}{x-x_k} \Bigg/ \sum_{j=0}^n \dfrac{\lambda_j}{x-x_j}, \text{para } x\notin \lbrace x_0,\ldots,x_n\rbrace,$$ donde $\{L_k\}$ es la base de polinomios de interpolación de Lagrange. Deduzca que $$L_k(x) s(x) = \lambda_k \dfrac{x-x_i}{x-x_k},$$ donde $\displaystyle s(x)=\sum_{j=0}^n \lambda_j \dfrac{x-x_i}{x-x_j}$, $i\in\{0,1,\ldots,n\}$. 
+\item (2 puntos) Del inciso (a), deduzca que $$L_k'(x) s(x)+L_k(x) s'(x)=\lambda_k\left(\dfrac{x-x_i}{x-x_k}\right)'.$$
+\item (2 puntos) Verifique que $s(x_i) =\lambda_i$ 
+%$\displaystyle s'(x_i)= \sum_{k\neq i}\dfrac{\lambda_k}{x_i-x_k}$ 
+y deduzca que $$L_k'(x_i) = \dfrac{\lambda_k}{\lambda_i}\dfrac{1}{x_i-x_k} (i\neq k).$$
+\item (2 puntos) Demuestre que $$L_k'(x_k) = -\sum_{i\neq k} L_i'(x_k).$$
+\item (6 puntos) Denote la matriz $D\in\mathbb{R}^{n+1 \times n+1}$ cuyas entradas vienen dadas por $D_{ik} = L_k'(x_i)$, para $i,j\in\{0,1,\ldots,n\}$. ¿Qué representa el vector $D f(\hat{\bm{x}})$, donde $\hat{\bm{x}}$ es el vector de nodos de Chebyshev y $f(\hat{\bm{x}})$ el vector con las imágenes de dichos nodos?
+\item (6 puntos) [\texttt{MATLAB}] Implemente una función que reciba $n$ y calcule la matriz $D$ del inciso anterior. Para $n=20, f(x)=1/(1+16x^2)$, calcule y grafique $f'(x)$, junto a los puntos $\left(\hat{\bm{x}}, D f(\hat{\bm{x}})\right)$. Cuantifique el error en los nodos de interpolación en esta gráfica.
+\item (3 puntos) [\texttt{MATLAB}] Grafique $\|D f(\hat{\bm{x}})- f'(\hat{\bm{x}})\|_\infty$ en función de $n$. ¿Cuál es el menor error posible?
+\end{enumerate}
+}
+
+\item {\rm
+Es posible escribir el polinomio de interpolación de Lagrange $p$ en la base de los polinomios de Chebyshev, 
+$$p(x) = \sum_{k=0}^n c_k T_k(x),\quad \vert x\vert \leq 1,$$
+donde $T_k(x) = \cos(k \arccos x)$. Sabemos que los polinomios de Chebyshev satisfacen la relación de recurrencia
+\begin{equation*}
+T_{k+1}(x) = \alpha_k(x) T_k(x) +\beta_k(x) T_{k-1}(x),
+\end{equation*}
+para $\alpha_k(x)= 2x$ y $\beta_k(x) = -1$. Deseamos calcular $p(x_0)$ para $x_0$ dado (asumiendo que lo tenemos expresado en esta base). Para ello, considere el siguiente algoritmo: 
+
+\begin{itemize}
+\item[Alg.1--] 
+Defina la sucesión $\lbrace b_k(x_0)\rbrace_{k=0}^{n+2}$ mediante la recurrencia hacia atrás:
+\begin{align*}
+b_{n+2}(x_0) &= b_{n+1}(x_0) = 0,\\
+b_k(x_0) &= c_k + \alpha_k(x_0) b_{k+1}(x_0) + \beta_{k+1}(x_0) b_{k+2}(x_0)\quad {\rm para }\ k = n,n-1,\ldots,1.
+\end{align*}
+Se tiene entonces que el valor deseado es 
+\begin{equation} \label{eq1}
+p(x_0) = T_0(x_0) c_0 + T_1(x_0) b_1(x_0)+\beta_1(x_0) T_0(x_0) b_2(x_0).
+\end{equation}
+\end{itemize}
+
+\begin{enumerate}
+\item (2 puntos) Determine el número de operaciones (sumas y multiplicaciones) que se deben realizar en el Algoritmo 4.
+%\item[(b)] Verifique que la fórmula \eqref{eq1} es correcta.
+\item (4 puntos) Escriba una función \texttt{y0 = evalCheb(c,x0)} en \texttt{MATLAB} que calcule $y_0 = p(x_0)$ mediante la fórmula \eqref{eq1}, donde la entrada es el vector de coeficientes $\bm{c}$ y el valor $x_0$.
+\item (3 puntos) Considere el polinomio $p(x) = x^3-3x^2+1$. Exprese $p(x)$ como combinación lineal de polinomios de Chebyshev $$p(x) = c_0 T_0(x) + c_1 T_1(x) + c_2 T_2(x) + c_3 T_3(x)$$ y verifique el comportamiento del algoritmo para $x_0=1$.
+\item (3 puntos) Utilice $\texttt{c = rand(n,1)}$, $n=10^8$, $x_0 = 0.1$ y reporte el tiempo de ejecución (puede realizar varias corridas y mostrar un tiempo promedio). Compare con el tiempo que requiere $\texttt{polyval}$ para evaluar un polinomio del mismo grado. Comente sus resultados.
+\end{enumerate}
+}
+
+
+
+\end{enumerate}
+
+\end{document}
