@@ -1,8 +1,10 @@
 
 
 
-
+%%
 % ejercicio 3
+
+% parte i
 function [T, nod, w] = tortog(n)
     %
     %   Función que recibe el tamaño de la matriz T y calcula los nodos
@@ -23,7 +25,7 @@ function [T, nod, w] = tortog(n)
 
     % Rellenamos los alpha
     for k = 1:n
-        T(k,k+1) = sqrt(k/(k+1));
+        T(k,k+1) = sqrt(k/(2*k + 1));
         T(k+1,k) = T(k,k+1);
     end
 
@@ -37,4 +39,21 @@ function [T, nod, w] = tortog(n)
     end
 end
 
-[T, nod, w] = tortog(1);
+% parte j
+
+% [~, nod, w] = tortog(0);
+% [~, nod, w] = tortog(1);
+
+% parte k
+n = 5;
+[T, nod, w] = tortog(n-1);
+f = @(x) x^8 + 2*x^2 + x;
+int = 0;
+for k = 1:n
+    int = int + w(k)*f(nod(k));
+end
+
+intf = @(x) x^9/9 + 2/3*x^3 + 0.5*x^2;
+explicit = intf(1) - intf(-1);
+
+%%
