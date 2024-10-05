@@ -25,7 +25,7 @@ function [T, nod, w] = tortog(n)
 
     % Rellenamos los alpha
     for k = 1:n
-        T(k,k+1) = k/sqrt((2*k + 1)*(2*k-1));
+        T(k,k+1) = k/sqrt(4*k^2 - 1);
         T(k+1,k) = T(k,k+1);
     end
 
@@ -42,7 +42,11 @@ end
 % parte j
 
 [~, nod, w] = tortog(0);
+disp(nod)
+disp(w)
 [~, nod, w] = tortog(1);
+disp(nod)
+disp(w)
 
 % parte k
 n = 5;
