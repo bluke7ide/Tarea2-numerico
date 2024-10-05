@@ -1,7 +1,3 @@
-
-
-
-%%
 % ejercicio 3
 
 % parte i
@@ -63,33 +59,39 @@ explicit = intf(1) - intf(-1);
 % parte l
 
 function c = gausscomp(a, b, m, n, f)
-    h = (b-a)/m;
-    xj = zeros(m+1,1);
-    for j = 1:m+1
-        xj(j) = a + j*h;
-    end
-    [~, nod, w] = tortog(n);
-
+    h = (b - a) / m;  
+    xj = linspace(a, b, m+1);  
+    
+    [~, nod, w] = tortog(n);  
+    
     c = 0;
+    
     for j = 1:m
         for k = 1:n+1
-            c = c + w(k)*f((xj(j) + xj(j+1) + h*nod(k))/2);
+            c = c + w(k) * f( (xj(j) + xj(j+1))/ 2 + (h / 2)*nod(k) );
         end
     end
-    c = c*h/2;
+    c = c * h / 2;
 end
 
-% gausscomp(-1, 1, 1, 5, f)
+gausscomp(-1, 1, 1, 5, f)
 
 % parte m
 
 g = @(x) sin(100.*pi.*x).*((1-x).^0.5).*log(1-x);
+m = zeros(100, 4);
+ind = [0, 2, 5, 8];
+for j = 1:4
+    for i = 1:100
+        m(i,j) = abs(gausscomp(0, 1, i, ind(j), g) - 0.000819761237123984);
+    end
+end
 
-% m = zeros(100, 1);
-% for i = 1:100
-%     m(i) = gausscomp(0, 1, i, 8, g);
-% end
+x = 1:100;  
+plot(x, m(:, 1), '-', x, m(:, 2), '-', x, m(:, 3), '-', x, m(:, 4), '-');
 
-
-
-%%
+xlabel('m');
+ylabel('error abs');
+title('Gráfico de los errores absolutos ');
+legend('n = 0', 'n = 2', 'n = 5', 'n = 8 ');
+grid on;
