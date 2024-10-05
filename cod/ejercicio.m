@@ -60,4 +60,36 @@ end
 intf = @(x) x^9/9 + 2/3*x^3 + 0.5*x^2;
 explicit = intf(1) - intf(-1);
 
+% parte l
+
+function c = gausscomp(a, b, m, n, f)
+    h = (b-a)/m;
+    xj = zeros(m+1,1);
+    for j = 1:m+1
+        xj(j) = a + j*h;
+    end
+    [~, nod, w] = tortog(n);
+
+    c = 0;
+    for j = 1:m
+        for k = 1:n+1
+            c = c + w(k)*f((xj(j) + xj(j+1) + h*nod(k))/2);
+        end
+    end
+    c = c*h/2;
+end
+
+% gausscomp(-1, 1, 1, 5, f)
+
+% parte m
+
+g = @(x) sin(100.*pi.*x).*((1-x).^0.5).*log(1-x);
+
+% m = zeros(100, 1);
+% for i = 1:100
+%     m(i) = gausscomp(0, 1, i, 8, g);
+% end
+
+
+
 %%
