@@ -52,20 +52,36 @@ int = 0;
 for k = 1:n
     int = int + w(k)*f(nod(k));
 end
+disp(int)
 
 intf = @(x) x^9/9 + 2/3*x^3 + 0.5*x^2;
-explicit = intf(1) - intf(-1);
+disp(intf(1) - intf(-1))
 
 % parte l
 
 function c = gausscomp(a, b, m, n, f)
+    %
+    %   Función que calcula la cuadratura de Gauss compuesta, por
+    %   medio de subintervalos m, con un nivel n, en el intervalo
+    %   [a,b] de la función f
+    %
+    %   Inputs
+    %       a - intervalo izquierdo
+    %       b - intervalo derecho
+    %       m - la cantidad de subintervalos
+    %       n - el nivel de las cuadraturas de Gauss
+    %       f - la función a integrar
+    % 
+    %   Outputs
+    %       c - el valor de la integral
+
+    % Realizamos el ancho de banda y los espaciamientos
     h = (b - a) / m;  
     xj = linspace(a, b, m+1);  
     
+    % Hacemos la doble sumatoria de la cuadratura compuesta
     [~, nod, w] = tortog(n);  
-    
     c = 0;
-    
     for j = 1:m
         for k = 1:n+1
             c = c + w(k) * f( (xj(j) + xj(j+1))/ 2 + (h / 2)*nod(k) );
@@ -74,10 +90,10 @@ function c = gausscomp(a, b, m, n, f)
     c = c * h / 2;
 end
 
-gausscomp(-1, 1, 1, 5, f)
+% a modo de comprobación
+disp(gausscomp(-1, 1, 1, 5, f))
 
 % parte m
-
 g = @(x) sin(100.*pi.*x).*((1-x).^0.5).*log(1-x);
 m = zeros(100, 4);
 ind = [0, 2, 5, 8];
